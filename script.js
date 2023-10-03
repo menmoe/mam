@@ -1,6 +1,7 @@
 const data = {
     "a": "1",
     "b": "2",
+    '<audio controls><source src="horse.ogg" type="audio/ogg"><source src="horse.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio>': "bb"
     // Add more key-value pairs as needed
 };
 
@@ -14,17 +15,19 @@ let matchedPairs = 0;
 function createButtons() {
     for (const key in data) {
         const keyButton = document.createElement('button');
-        keyButton.innerText = key;
+        keyButton.innerHTML = key;
         keyButton.classList.add('key-button');
         keyButton.addEventListener('click', () => selectKey(key));
         leftColumn.appendChild(keyButton);
 
         const valueButton = document.createElement('button');
-        valueButton.innerText = data[key];
+        valueButton.innerHTML = data[key];
         valueButton.classList.add('value-button');
         valueButton.addEventListener('click', () => selectValue(data[key]));
         rightColumn.appendChild(valueButton);
     }
+    shuffleElements(rightColumn);
+    shuffleElements(leftColumn);
 }
 
 // Function to select a key
@@ -86,6 +89,23 @@ function findMatchingElement(className, text) {
 
   // If no matching element is found, return null
   return null;
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function shuffleElements(parentElement) {
+    const childrenArray = [...parentElement.children];
+    shuffleArray(childrenArray);
+
+    parentElement.innerHTML = '';
+    childrenArray.forEach(child => {
+        parentElement.appendChild(child);
+    });
 }
 
 // Initialize the game
