@@ -7,9 +7,10 @@ const data = {
 
 const leftColumn = document.getElementById('left-column');
 const rightColumn = document.getElementById('right-column');
+
 let selectedKey = null;
 let selectedValue = null;
-let matchedPairs = 0;
+let matchedPairs = 0; // When this number matches the number of keys in 'data', the game ends
 
 // Function to create buttons based on the data object
 function createButtons() {
@@ -26,14 +27,13 @@ function createButtons() {
         valueButton.addEventListener('click', () => selectValue(data[key]));
         rightColumn.appendChild(valueButton);
     }
-    shuffleElements(rightColumn);
-    shuffleElements(leftColumn);
+    shuffleChildElements(rightColumn);
+    shuffleChildElements(leftColumn);
 }
 
 // Function to select a key
 function selectKey(key) {
-    if (selectedKey === key) {
-        // Deselect the key if it's already selected
+    if (selectedKey === key) { // Deselect the key if it's already selected
         selectedKey = null;
     } else {
         selectedKey = key;
@@ -44,8 +44,7 @@ function selectKey(key) {
 
 // Function to select a value
 function selectValue(value) {
-    if (selectedValue === value) {
-        // Deselect the value if it's already selected
+    if (selectedValue === value) { // Deselect the value if it's already selected
         selectedValue = null;
     } else {
         selectedValue = value;
@@ -56,56 +55,56 @@ function selectValue(value) {
 
 function findMatch() {
     // Check if the selected key and value match
-    if (selectedKey === null || selectedValue === null) { 
-        return; 
-    }
+    if (selectedKey === null || selectedValue === null) { return; }
+
     if (data[selectedKey] === selectedValue) {
         alert("Success!");
         matchedPairs++;
-        if (matchedPairs === Object.keys(data).length) {
+        if (matchedPairs === Object.keys(data).length) { // When all the matches have made correctly
             alert("You win!");
         }
 
         // Disable the matched key and value buttons
-        const selectedKeyButton = findMatchingElement('key-button', selectedKey);
-        disableElementAndAudio(selectedKeyButton);
+        const selectedKeyButton = getElementByinnerHTML('key-button', selectedKey);
+        selectedKeyButton.disabled = true;
+        disableAuidoInElement(selectedKeyButton);
 
-        const selectedValueButton = findMatchingElement('value-button', selectedValue);
-        disableElementAndAudio(selectedValueButton);
+        const selectedValueButton = getElementByinnerHTML('value-button', selectedValue);
+        selectedValueButton.disabled = true;
+        disableAuidoInElement(selectedValueButton);
 
-    } else {
+    } else { // If they do not match
         alert("Wrong!");
     }
+
     // Clear selections
     selectedKey = null;
     selectedValue = null;
 }
 
-function findMatchingElement(className, text) {
+/**
+ * UTILITY FUNCTIONS
+ */
+function getElementByinnerHTML(className, text) {
   const elements = document.getElementsByClassName(className);
   
   for (let i = 0; i < elements.length; i++) {
-    console.log(text);
-    console.log(elements[i]);
     if (elements[i].innerHTML.toString() === text) {
-        console.log("match found");
       return elements[i];
     }
-    console.log("not a match")
   }
-
-  // If no matching element is found, return null
+  // If there are no matching elements
   return null;
 }
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+function shuffleArray(array) { // Uses the Fisher-Yates Method
+    for (let i = 0; i < array.length - 1; i++) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
 }
 
-function shuffleElements(parentElement) {
+function shuffleChildElements(parentElement) {
     const childrenArray = [...parentElement.children];
     shuffleArray(childrenArray);
 
@@ -115,12 +114,12 @@ function shuffleElements(parentElement) {
     });
 }
 
-function disableElementAndAudio(parent) {
-    parent.disabled = true;
-        if (parent.children[0]) {
-            parent.children[0].src = '';
-            parent.children[0].classList.add('disabled');
-        }
+function disableAuidoInElement(parentElement) {
+    const childrenArray = [...parentElement.children];
+    childrenArray.forEach(child => {
+        child.src = '';
+        child.classList.add('disabled');
+    });
 }
 
 // Initialize the game
