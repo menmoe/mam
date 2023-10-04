@@ -49,20 +49,6 @@ button.incorrect {
     animation: flash-red 1s;
 }
 
-@keyframes flash-green {
-    0% {
-        background-color: #8BC34A;
-    }
-    100% {
-        background-color: #fff;
-    }
-}
-
-@keyframes flash-red {
-    0% {
-        background-color: #F44336;
-    }
-    100% {
-        background-color: #fff;
-    }
+.disabled {
+    opacity: 50%;
 }

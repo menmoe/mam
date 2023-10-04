@@ -67,12 +67,12 @@ function findMatch() {
         }
 
         // Disable the matched key and value buttons
-        const selectedKeyButton = findMatchingElement('key-button', selectedKey)
-        selectedKeyButton.disabled = true;
-        selectedKeyButton.children[0].disabled = true;
+        const selectedKeyButton = findMatchingElement('key-button', selectedKey);
+        disableElementAndAudio(selectedKeyButton);
 
-        findMatchingElement('value-button', selectedValue).disabled = true; 
-        
+        const selectedValueButton = findMatchingElement('value-button', selectedValue);
+        disableElementAndAudio(selectedValueButton);
+
     } else {
         alert("Wrong!");
     }
@@ -86,10 +86,12 @@ function findMatchingElement(className, text) {
   
   for (let i = 0; i < elements.length; i++) {
     console.log(text);
-    console.log(elements[i].innerHTML.toString());
+    console.log(elements[i]);
     if (elements[i].innerHTML.toString() === text) {
+        console.log("match found");
       return elements[i];
     }
+    console.log("not a match")
   }
 
   // If no matching element is found, return null
@@ -111,6 +113,14 @@ function shuffleElements(parentElement) {
     childrenArray.forEach(child => {
         parentElement.appendChild(child);
     });
+}
+
+function disableElementAndAudio(parent) {
+    parent.disabled = true;
+        if (parent.children[0]) {
+            parent.children[0].src = '';
+            parent.children[0].classList.add('disabled');
+        }
 }
 
 // Initialize the game
