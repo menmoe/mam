@@ -1,7 +1,7 @@
 const data = {
     "a": "1",
     "b": "2",
-    '<audio controls><source src="horse.ogg" type="audio/ogg"><source src="horse.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio>': "bb"
+    '<audio controls=""><source src="horse.ogm"></audio>': "bb"
     // Add more key-value pairs as needed
 };
 
@@ -67,7 +67,10 @@ function findMatch() {
         }
 
         // Disable the matched key and value buttons
-        findMatchingElement('key-button', selectedKey).disabled = true; 
+        const selectedKeyButton = findMatchingElement('key-button', selectedKey)
+        selectedKeyButton.disabled = true;
+        selectedKeyButton.children[0].disabled = true;
+
         findMatchingElement('value-button', selectedValue).disabled = true; 
         
     } else {
@@ -82,7 +85,9 @@ function findMatchingElement(className, text) {
   const elements = document.getElementsByClassName(className);
   
   for (let i = 0; i < elements.length; i++) {
-    if (elements[i].innerText === text) {
+    console.log(text);
+    console.log(elements[i].innerHTML.toString());
+    if (elements[i].innerHTML.toString() === text) {
       return elements[i];
     }
   }
