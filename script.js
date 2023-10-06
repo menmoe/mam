@@ -31,12 +31,25 @@ function createButtons() {
     shuffleChildElements(leftColumn);
 }
 
+// Reset the buttons
+function resetKeyButton() {
+    if (!selectedKey) { return; }
+    getElementByInnerHTML('key-button', selectedKey).classList.remove('selected', 'incorrect', 'correct');
+}
+
+function resetValueButton() {
+    if (!selectedValue) { return; }
+    getElementByInnerHTML('value-button', selectedValue).classList.remove('selected', 'incorrect', 'correct');
+}
+
 // Function to select a key
 function selectKey(key) {
+    resetKeyButton();
     if (selectedKey === key) { // Deselect the key if it's already selected
         selectedKey = null;
     } else {
         selectedKey = key;
+        getElementByInnerHTML('key-button', selectedKey).classList.add('selected');
     }
 
     findMatch();
@@ -44,37 +57,55 @@ function selectKey(key) {
 
 // Function to select a value
 function selectValue(value) {
+    resetValueButton();
     if (selectedValue === value) { // Deselect the value if it's already selected
         selectedValue = null;
     } else {
         selectedValue = value;
+        getElementByInnerHTML('value-button', selectedValue).classList.add('selected');
     }
 
     findMatch();
 }
 
 function findMatch() {
+    const selectedKeyButton = getElementByInnerHTML('key-button', selectedKey);
+    const selectedValueButton = getElementByInnerHTML('value-button', selectedValue);
+
     // Check if the selected key and value match
     if (selectedKey === null || selectedValue === null) { return; }
 
     if (data[selectedKey] === selectedValue) {
-        alert("Success!");
+        // alert("Success!");
         matchedPairs++;
         if (matchedPairs === Object.keys(data).length) { // When all the matches have made correctly
             alert("You win!");
         }
 
         // Disable the matched key and value buttons
-        const selectedKeyButton = getElementByinnerHTML('key-button', selectedKey);
+        resetKeyButton();
         selectedKeyButton.disabled = true;
         disableAuidoInElement(selectedKeyButton);
 
-        const selectedValueButton = getElementByinnerHTML('value-button', selectedValue);
+        resetValueButton();
         selectedValueButton.disabled = true;
         disableAuidoInElement(selectedValueButton);
 
     } else { // If they do not match
-        alert("Wrong!");
+        // alert("Wrong!");
+
+        selectedKeyButton.classList.add('incorrect');
+        setTimeout(() => {
+            selectedKeyButton.classList.remove('incorrect');
+            selectedKeyButton.classList.remove('selected');
+        }, 500);
+
+        selectedValueButton.classList.add('incorrect');
+        setTimeout(() => {
+            selectedValueButton.classList.remove('incorrect');
+            selectedValueButton.classList.remove('selected');
+        }, 500);
+
     }
 
     // Clear selections
@@ -85,22 +116,22 @@ function findMatch() {
 /**
  * UTILITY FUNCTIONS
  */
-function getElementByinnerHTML(className, text) {
-  const elements = document.getElementsByClassName(className);
-  
-  for (let i = 0; i < elements.length; i++) {
-    if (elements[i].innerHTML.toString() === text) {
-      return elements[i];
+function getElementByInnerHTML(className, text) {
+    const elements = document.getElementsByClassName(className);
+
+    for (let i = 0; i < elements.length; i++) {
+        if (elements[i].innerHTML.toString() === text) {
+            return elements[i];
+        }
     }
-  }
-  // If there are no matching elements
-  return null;
+    // If there are no matching elements
+    return null;
 }
 
 function shuffleArray(array) { // Uses the Fisher-Yates Method
     for (let i = 0; i < array.length - 1; i++) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
 }
 
@@ -120,6 +151,10 @@ function disableAuidoInElement(parentElement) {
         child.src = '';
         child.classList.add('disabled');
     });
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // Initialize the game

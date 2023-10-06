@@ -36,17 +36,21 @@ button {
     transition: background-color 0.3s ease-in-out;
 }
 
+.selected {
+    background-color: #439ce0;
+}
+
 button:disabled {
     cursor: not-allowed;
     background-color: #ccc;
 }
 
 button.correct {
-    animation: flash-green 1s;
+    background-color: #00ff00;
 }
 
 button.incorrect {
-    animation: flash-red 1s;
+    background-color: #ff0000;
 }
 
 .disabled {
